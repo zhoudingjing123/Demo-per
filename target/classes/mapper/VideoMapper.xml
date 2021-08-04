@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xdclass.mapper.VideoMapper">
+    <sql id="base_video_field">
+        id,title,summary,cover_img
+    </sql>
+    <select id="selectById" resultType="Video">
+        select <include refid="base_video_field"/>  from video where id=#{video_Id}
+    </select>
+    <select id="selectListXML" resultType="com.xdclass.pojo.Video">
+        select * from video
+    </select>
+
+    <select id="selectKile" resultType="com.xdclass.pojo.Video">
+        select * from video where point=#{point} and title like concat('%', #{title},'%')
+    </select>
+
+    <insert id="insertTest" parameterType="com.xdclass.pojo.Video" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+
+        INSERT INTO `video` ( `title`, `summary`, `cover_img`, `price`, `create_time`, `point`)
+        VALUES
+      (#{title,jdbcType=VARCHAR},#{summary,jdbcType=VARCHAR},#{coverImg,jdbcType=VARCHAR},#{price,jdbcType=INTEGER},
+       #{createTime,jdbcType=TIMESTAMP},#{point,jdbcType=DOUBLE});
+
+</insert>
+    <!--批量插入-->
+    <insert id="addBatch" parameterType="com.xdclass.pojo.Video" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+
+    INSERT INTO `video` ( `title`, `summary`, `cover_img`, `price`, `create_time`, `point`)
+    VALUES
+
+    <foreach collection="list" item="video" separator=",">
+
+        (#{video.title,jdbcType=VARCHAR},#{video.summary,jdbcType=VARCHAR},#{video.coverImg,jdbcType=VARCHAR},
+        #{video.price,jdbcType=INTEGER},
+        #{video.createTime,jdbcType=TIMESTAMP},#{video.point,jdbcType=DOUBLE})
+
+    </foreach>
+    </insert>
+    <update id="updateVideo" parameterType="com.xdclass.pojo.Video">
+
+
+
+        update video
+
+        <trim prefix="set" suffixOverrides=",">
+
+            <if test="title != null "> title = #{title,jdbcType=VARCHAR},</if>
+
+            <if test="summary != null "> summary = #{summary,jdbcType=VARCHAR},</if>
+
+            <if test="coverImg != null "> cover_img = #{coverImg,jdbcType=VARCHAR},</if>
+
+            <if test="price != 0 "> price = #{price,jdbcType=INTEGER},</if>
+
+            <if test="createTime !=null "> create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+
+            <!-- 特别注意： 一定要看pojo类里面的是基本数据类型，还是包装数据类型-->
+            <if test="point != null "> point = #{point,jdbcType=DOUBLE},</if>
+
+        </trim>
+
+        where
+        id = #{id}
+
+    </update>
+    <delete id="deleteByCreateTimeAndPrice" parameterType="java.util.Map">
+
+        delete from video where create_time <![CDATA[ > ]]> #{createTime} and price <![CDATA[ >= ]]> #{price}
+
+</delete>
+    <resultMap id="VideoResultMap" type="Video">
+
+        <!--
+        id 指定查询列的唯一标示
+        column 数据库字段的名称
+        property pojo类的名称
+        -->
+        <id column="id" property="id" jdbcType="INTEGER" />
+
+        <result column="video_tile" property="title"  jdbcType="VARCHAR" />
+        <result column="summary" property="summary"  jdbcType="VARCHAR" />
+        <result column="cover_img"  property="coverImg"  jdbcType="VARCHAR" />
+
+    </resultMap>
+    <select id="selectBaseFieldByIdWithResultMap" resultMap="VideoResultMap">
+select id , title as video_tile, summary, cover_img from video where id = #{video_id}
+</select>
+    <cache eviction="LRU" flushInterval="100000" readOnly="true" size="1024"/>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="video1" class="com.xdclass.pojo.Video" scope="singleton">
+        <property name="id" value="9"/>
+        <property name="title" value="spring 5.x应用"/>
+
+    </bean>
+
+    <bean name="videoOrder" class="com.xdclass.pojo.VideoOrder"  scope="singleton" autowire="constructor">
+        <property name="outTradeNo" value="欢迎来到新的世界"/>
+        <property name="id" value="44"/>
+    </bean>
+
+</beans>
