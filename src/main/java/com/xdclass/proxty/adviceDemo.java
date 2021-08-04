@@ -7,9 +7,9 @@ package com.xdclass.proxty;
  */
 public class adviceDemo {
     public static void main(String[] args) {
-      /*  AdviceService adviceService=new AdviceServiceImpl();
+        AdviceService adviceService=new AdviceServiceImpl();
         adviceService.collball("aaassff");
-        adviceService.save(45,24);*/
+        adviceService.save(45,24);
         staticAdvice statica=new staticAdvice(new AdviceServiceImpl());
         statica.save(45,65);
     }
